@@ -68,3 +68,62 @@ print(res)
 
 data = pd.DataFrame(res)
 data.to_csv('./data.csv')
+
+
+
+
+# 학생 2
+
+# 맨 첫번째 상품 들어가기
+time.sleep(2)
+serch = driver.find_element_by_xpath(
+    '//*[@id="layBodyWrap"]/div/div/div[3]/div/nav/ul/li[1]/a')
+serch.click()
+
+# 첫 번째 리뷰 들어가기
+time.sleep(2)
+selector = "#layBodyWrap > div > div > div.l_search_content > div > section:nth-child(3) > ul > li:nth-child(1) > div > div:nth-child(2) > div.c_card_info_top > div.c_prd_name.c_prd_name_row_1 > a"
+elem = driver.find_element_by_css_selector(selector)
+
+href = elem.get_attribute('href')
+print(href)
+script = f"window.open('{href}');"
+driver.get(script)
+
+
+# 리뷰 추출
+time.sleep(2)
+serch = driver.find_element_by_xpath(
+    '//*[@id="tabMenuDetail2"]')
+serch.click()
+
+res2 = []
+res2.append(('평점','리뷰'))
+for i in range(5):
+    time.sleep(10)
+    for j in range(1, 10):
+        try:
+            star = driver.find_element_by_xpath(
+                f'//*[@id="review-list-page-area"]/ul/li[{j}]/div/p[1]/span/em').text
+            print(f'---{star}---')
+        except:
+            star = "NAN"
+            pass
+        try:
+            review = driver.find_element_by_xpath(
+                f'//*[@id="review-list-page-area"]/ul/li[{j}]/div/div/div[2]/p').text
+            print(f'---{review}---')
+        except:
+            review = "NAN"
+            pass
+        res2.append((star, review))
+    if i == 0 or i == 1 or i == 2 or i == 3 :
+        serch = driver.find_element_by_xpath(
+        f'//*[@id="review-list-page-area"]/div/button')
+        serch.click()
+
+print(res2)
+driver.quit()
+
+data = pd.DataFrame(res2)
+data.to_csv('./data2.csv')
